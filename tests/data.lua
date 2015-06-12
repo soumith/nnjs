@@ -1,13 +1,15 @@
 require 'nn'
 json=require 'cjson'
 
-ip = 1
-op = 5
-kH = 3
-kW = 3
-iH = 7
-iW = 7
+ip = torch.random(1,20)
+op = torch.random(1,20)
+kH = torch.random(1,10)
+kW = torch.random(1,10)
+iH = torch.random(kH, 64)
+iW = torch.random(kW, 64)
 
+-- test W: 9x6x10x1 I: 6x45x21
+-- test non-equal kernels
 mod = nn.SpatialConvolution(ip,op,kH,kW)
 inp = torch.randn(ip, iH, iW)
 out = mod:forward(inp)
