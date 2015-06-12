@@ -38,6 +38,6 @@ enc.iW = iW
 
 jenc = json.encode(enc)
 
-f = io.open('conv.json', 'w')
+f = io.open('data/conv.json', 'w')
 f:write(jenc)
 f:close()

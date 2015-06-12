@@ -5,7 +5,7 @@ var assert = require("assert")
 var eps = 1e-3
 
 function testConvolution() {
-    var data = JSON.parse(fs.readFileSync('conv.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));
     var weight = ndarray(data.weight, [data.op, data.ip, data.kH, data.kW]);
     var bias = ndarray(data.bias, [data.op]);
     var mod = new nn.SpatialConvolution(weight, bias);
