@@ -41,13 +41,11 @@ SpatialConvolution.prototype.forward = function(input) {
     /* do convolutions */
     for(var i = 0; i < nOutputPlane; i++) {
 	var oChan = output.pick(i, null, null);
-	//console.log(oChan.shape)
 	for(j = 0; j < nInputPlane; j++) {
 	    /* get kernel */
 	    var kChan = weight.pick(i, j, null, null);
 	    /* get input */
 	    var iChan = input.pick(j, null, null)
-	    //console.log(iChan.shape);
 	    /* regular convolution */
 	    var posH = 0;
 	    var posW = 0;

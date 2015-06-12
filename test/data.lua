@@ -8,9 +8,18 @@ kW = torch.random(1,10)
 iH = torch.random(kH, 64)
 iW = torch.random(kW, 64)
 
--- test W: 9x6x10x1 I: 6x45x21
--- test non-equal kernels
-mod = nn.SpatialConvolution(ip,op,kH,kW)
+--[[
+ip = 1
+op = 1
+kH = 1
+kW = 2
+iH = 2
+iW = 2
+]]--
+
+print(ip, op, kH, kW, iH, iW)
+
+mod = nn.SpatialConvolution(ip,op,kW,kH)
 inp = torch.randn(ip, iH, iW)
 out = mod:forward(inp)
 

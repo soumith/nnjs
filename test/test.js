@@ -1,6 +1,8 @@
 var fs = require('fs');
 var nn = require('../js/conv.js')
 var ndarray = require("ndarray")
+var assert = require("assert")
+var eps = 1e-3
 
 function testConvolution() {
     var data = JSON.parse(fs.readFileSync('conv.json', 'utf8'));
@@ -13,18 +15,16 @@ function testConvolution() {
     var inp = ndarray(data.inp, [data.ip, data.iH, data.iW])
     var out = mod.forward(inp)
     var err = 0;
-    console.log(weight.shape);
-    console.log(inp.shape);
     for (i=0; i < data.op; i++) {
 	for (j=0; j < oH; j++) {
 	    for (k=0; k < oW; k++) {
-		// console.log(out.get(i,j,k) + ',' +  gt.get(i,j,k))
-		err = err + Math.abs(out.get(i,j,k) - gt.get(i,j,k));
+		err = Math.max(err, Math.abs(out.get(i,j,k) - gt.get(i,j,k)));
 	    }
 	}
-    }
-    console.log('Convolution error: ' + err);
+    }    
+    assert.equal(true, err <= eps, "Convolution test failed. Error: " + err)
 }
 
-
-testConvolution();
+describe('SpatialConvolution', function() {
+    it('Should compare against torch convolutions', testConvolution)
+});
