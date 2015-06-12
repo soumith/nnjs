@@ -1,8 +1,8 @@
 var fs = require('fs');
-var nn = require('../js/conv.js')
+var nn = require('../js/init.js')
 var ndarray = require("ndarray")
 var assert = require("assert")
-var eps = 1e-3
+var eps = 1e-5
 
 function testConvolution() {
     var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));

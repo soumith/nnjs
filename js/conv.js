@@ -1,3 +1,4 @@
+var env = require('./env.js')
 var ndarray = require("ndarray")
 var fill = require("ndarray-fill")
 
@@ -72,6 +73,4 @@ SpatialConvolution.prototype.forward = function(input) {
     return output
 }
 
-module.exports = {
-    SpatialConvolution: SpatialConvolution
-}
+env.SpatialConvolution = SpatialConvolution
