@@ -4,7 +4,7 @@ var ndarray = require("ndarray")
 var assert = require("assert")
 var eps = 1e-5
 
-function testConvolution() {
+function testSpatialConvolution() {
     var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));
     var weight = ndarray(data.weight, [data.op, data.ip, data.kH, data.kW]);
     var bias = ndarray(data.bias, [data.op]);
@@ -26,5 +26,34 @@ function testConvolution() {
 }
 
 describe('SpatialConvolution', function() {
-    it('Should compare against torch convolutions', testConvolution)
+    it('Should compare against torch convolutions', testSpatialConvolution)
+});
+
+function testSpatialMaxPooling() {
+    var data = JSON.parse(fs.readFileSync('data/pool.json', 'utf8'));
+    var mod = new nn.SpatialMaxPooling(data.kH, data.kW, data.dH, data.dW);
+    var iH = data.iH
+    var iW = data.iW
+    var kH = data.kH
+    var kW = data.kW
+    var dH = data.dH
+    var dW = data.dW
+    var oH = Math.floor((iH - kH) / dH + 1);
+    var oW = Math.floor((iW - kW) / dW + 1);
+    var gt = ndarray(data.out, [data.np, oH, oW])
+    var inp = ndarray(data.inp, [data.np, data.iH, data.iW])
+    var out = mod.forward(inp)
+    var err = 0;
+    for (i=0; i < data.np; i++) {
+	for (j=0; j < oH; j++) {
+	    for (k=0; k < oW; k++) {
+		err = Math.max(err, Math.abs(out.get(i,j,k) - gt.get(i,j,k)));
+	    }
+	}
+    }    
+    assert.equal(true, err <= eps, "MaxPooling test failed. Error: " + err)
+}
+
+describe('SpatialMaxPooling', function() {
+    it('Should compare against torch SpatialMaxPooling', testSpatialMaxPooling)
 });

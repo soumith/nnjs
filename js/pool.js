@@ -9,16 +9,21 @@ function SpatialMaxPooling(kH, kW, dH, dW) {
     this.dW = dW
 }
 
-SpatialMaxPooling.prototype.forward(input) {
+SpatialMaxPooling.prototype.forward = function(input) {
     var nPlane = input.shape[0];
     var iH = input.shape[1];
     var iW = input.shape[2];
     var kH = this.kH
     var kW = this.kW
+    var dH = this.dH
+    var dW = this.dW
     var oH = Math.floor((iH - kH) / dH + 1);
     var oW = Math.floor((iW - kW) / dW + 1);
 
     var output = ndarray(new Float32Array(nPlane * oH * oW),  [nPlane, oH, oW]);
+
+    var idata = input.data;
+    var odata = output.data;
 
     for (k = 0; k < nPlane; k++) {
 	/* loop over output */
@@ -26,7 +31,7 @@ SpatialMaxPooling.prototype.forward(input) {
 	for(i = 0; i < oH; i++) {
 	    for(j = 0; j < oW; j++) {
 		/* local pointers */
-		var ip = k*iwidth*iheight + i*iwidth*dH + j*dW;
+		var ip = k*iW*iH + i*iW*dH + j*dW;
 		var op = k*oW*oH + i*oW + j;
 
 		/* compute local max: */
@@ -34,14 +39,14 @@ SpatialMaxPooling.prototype.forward(input) {
 		var x,y;
 		for(y = 0; y < kH; y++) {
 		    for(x = 0; x < kW; x++) {
-			var val = input.data[ip + y*iwidth + x];
+			var val = idata[ip + y*iW + x];
 			if (val > maxval) {
 			    maxval = val;
 			}
 		    }
 		}
 		/* set output to local max */
-		output.data[op] = maxval;
+		odata[op] = maxval;
 	    }
 	}
     }
