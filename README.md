@@ -2,7 +2,7 @@
 
 **A fast low-level javascript package for multi-threaded (and SIMD-optimized) neural net layers for the browser.**
 
-This package is not meant to replace the excellent convnet.js,  
+This package is not meant to replace the excellent [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/),  
 but provide a lower-level package that convnet.js could possibly depend on.
 
 For now, this package only implements the **forward** ops, and does not implement backward.
@@ -17,6 +17,14 @@ For now, this package only implements the **forward** ops, and does not implemen
 ```
 nn.SpatialConvolution(weight, bias) 
 nn.SpatialMaxPooling(kH, kW, dH, dW)
+nn.ReLU()
+nn.Sigmoid()
+nn.Tanh()
+nn.CAddTable()
+nn.Linear()
+nn.SpatialConvolutionUpsample
+nn.View()
+nn.FeatureLPPooling()
 ```
 
 
