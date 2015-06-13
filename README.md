@@ -12,6 +12,14 @@ For now, this package only implements the **forward** ops, and does not implemen
 - matrix multiplies (in the context of fully-connected layers)
 - fast vector addition
 
+
+### Layers:
+```
+nn.SpatialConvolution(weight, bias) 
+nn.SpatialMaxPooling(kH, kW, dH, dW)
+```
+
+
 ###Uses:
 
 - Web workers for using multiple cores
