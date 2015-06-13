@@ -7,22 +7,25 @@ but provide a lower-level package that convnet.js could possibly depend on.
 
 For now, this package only implements the **forward** ops, and does not implement backward.
 
-Optimized versions of:
+###Optimized versions of:
 - convolutions (in the context of convnets)
 - matrix multiplies (in the context of fully-connected layers)
 - fast vector addition
 
-Uses:
+###Uses:
+
 - Web workers for using multiple cores
 - SIMD optimizations if the browser supports asm.js
 
 
-Dependencies:
+###Dependencies:
+
 - ndarray
 - ndarray-fill
 - paralleljs
 
-Unit tests:
+###Unit tests:
+
 Unit tests can be run via nodejs.
 ``` bash
 $ npm -g install mocha
