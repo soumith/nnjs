@@ -32,14 +32,8 @@ describe('SpatialConvolution', function() {
 function testSpatialMaxPooling() {
     var data = JSON.parse(fs.readFileSync('data/pool.json', 'utf8'));
     var mod = new nn.SpatialMaxPooling(data.kH, data.kW, data.dH, data.dW);
-    var iH = data.iH
-    var iW = data.iW
-    var kH = data.kH
-    var kW = data.kW
-    var dH = data.dH
-    var dW = data.dW
-    var oH = Math.floor((iH - kH) / dH + 1);
-    var oW = Math.floor((iW - kW) / dW + 1);
+    var oH = Math.floor((data.iH - data.kH) / data.dH + 1);
+    var oW = Math.floor((data.iW - data.kW) / data.dW + 1);
     var gt = ndarray(data.out, [data.np, oH, oW])
     var inp = ndarray(data.inp, [data.np, data.iH, data.iW])
     var out = mod.forward(inp)
