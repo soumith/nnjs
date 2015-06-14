@@ -76,7 +76,7 @@ SpatialConvolution.prototype.forward = function(input) {
 
 env.SpatialConvolution = SpatialConvolution
 
-},{"./env.js":2,"ndarray":11,"ndarray-fill":5}],2:[function(require,module,exports){
+},{"./env.js":2,"ndarray":"ndarray","ndarray-fill":"ndarray-fill"}],2:[function(require,module,exports){
 module.exports = {
 }
 
@@ -116,7 +116,7 @@ Linear.prototype.forward = function(input) {
 
 env.Linear = Linear
 
-},{"./env.js":2,"ndarray":11,"ndarray-fill":5}],4:[function(require,module,exports){
+},{"./env.js":2,"ndarray":"ndarray","ndarray-fill":"ndarray-fill"}],4:[function(require,module,exports){
 var env = require('./env.js')
 var ndarray = require("ndarray")
 var fill = require("ndarray-fill")
@@ -174,21 +174,9 @@ SpatialMaxPooling.prototype.forward = function(input) {
 
 env.SpatialMaxPooling = SpatialMaxPooling
 
-},{"./env.js":2,"ndarray":11,"ndarray-fill":5}],5:[function(require,module,exports){
-"use strict"
-
-
-
-var fill = require('cwise/lib/wrapper')({"args":["index","array","scalar"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_1_arg1_=_inline_1_arg2_.apply(void 0,_inline_1_arg0_)}","args":[{"name":"_inline_1_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":1}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"cwise","blockSize":64})
-
-module.exports = function(array, f) {
-  fill(array, f)
-  return array
-}
-
-},{"cwise/lib/wrapper":6}],6:[function(require,module,exports){
+},{"./env.js":2,"ndarray":"ndarray","ndarray-fill":"ndarray-fill"}],5:[function(require,module,exports){
 module.exports = require("cwise-compiler")
-},{"cwise-compiler":7}],7:[function(require,module,exports){
+},{"cwise-compiler":6}],6:[function(require,module,exports){
 "use strict"
 
 var createThunk = require("./lib/thunk.js")
@@ -299,7 +287,7 @@ function compileCwise(user_args) {
 
 module.exports = compileCwise
 
-},{"./lib/thunk.js":9}],8:[function(require,module,exports){
+},{"./lib/thunk.js":8}],7:[function(require,module,exports){
 "use strict"
 
 var uniq = require("uniq")
@@ -655,7 +643,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":10}],9:[function(require,module,exports){
+},{"uniq":9}],8:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -728,7 +716,7 @@ function createThunk(proc) {
 
 module.exports = createThunk
 
-},{"./compile.js":8}],10:[function(require,module,exports){
+},{"./compile.js":7}],9:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -787,7 +775,50 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
+},{}],10:[function(require,module,exports){
+"use strict"
+
+function iota(n) {
+  var result = new Array(n)
+  for(var i=0; i<n; ++i) {
+    result[i] = i
+  }
+  return result
+}
+
+module.exports = iota
 },{}],11:[function(require,module,exports){
+/**
+ * Determine if an object is Buffer
+ *
+ * Author:   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
+ * License:  MIT
+ *
+ * `npm install is-buffer`
+ */
+
+module.exports = function (obj) {
+  return !!(
+    obj != null &&
+    obj.constructor &&
+    typeof obj.constructor.isBuffer === 'function' &&
+    obj.constructor.isBuffer(obj)
+  )
+}
+
+},{}],"ndarray-fill":[function(require,module,exports){
+"use strict"
+
+
+
+var fill = require('cwise/lib/wrapper')({"args":["index","array","scalar"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{_inline_1_arg1_=_inline_1_arg2_.apply(void 0,_inline_1_arg0_)}","args":[{"name":"_inline_1_arg0_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg1_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":1}],"thisVars":[],"localVars":[]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"debug":false,"funcName":"cwise","blockSize":64})
+
+module.exports = function(array, f) {
+  fill(array, f)
+  return array
+}
+
+},{"cwise/lib/wrapper":5}],"ndarray":[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -1132,38 +1163,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":12,"is-buffer":13}],12:[function(require,module,exports){
-"use strict"
-
-function iota(n) {
-  var result = new Array(n)
-  for(var i=0; i<n; ++i) {
-    result[i] = i
-  }
-  return result
-}
-
-module.exports = iota
-},{}],13:[function(require,module,exports){
-/**
- * Determine if an object is Buffer
- *
- * Author:   Feross Aboukhadijeh <feross@feross.org> <http://feross.org>
- * License:  MIT
- *
- * `npm install is-buffer`
- */
-
-module.exports = function (obj) {
-  return !!(
-    obj != null &&
-    obj.constructor &&
-    typeof obj.constructor.isBuffer === 'function' &&
-    obj.constructor.isBuffer(obj)
-  )
-}
-
-},{}],"nn":[function(require,module,exports){
+},{"iota-array":10,"is-buffer":11}],"nn":[function(require,module,exports){
 var env = require('./env.js')
 
 require('./conv.js')
