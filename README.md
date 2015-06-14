@@ -63,5 +63,5 @@ $ mocha
 ### Building for the browser
 ``` bash
 npm install -g browserify
-browserify js/init.js -o nn.js
+browserify -r ./js/init.js:nn -o static/js/nn.js
 ```
