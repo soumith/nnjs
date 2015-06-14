@@ -57,3 +57,22 @@ function testSpatialMaxPooling() {
 describe('SpatialMaxPooling', function() {
     it('Should compare against torch SpatialMaxPooling', testSpatialMaxPooling)
 });
+
+function testLinear() {
+    var data = JSON.parse(fs.readFileSync('data/full.json', 'utf8'));
+    var weight = ndarray(data.weight, [data.outSize, data.inSize]);
+    var bias = ndarray(data.bias, [data.outSize]);
+    var mod = new nn.Linear(weight, bias);
+    var gt = ndarray(data.out, [data.outSize])
+    var inp = ndarray(data.inp, [data.inSize])
+    var out = mod.forward(inp)
+    var err = 0;
+    for (i=0; i < data.outSize; i++) {
+	err = Math.max(err, Math.abs(out.get(i) - gt.get(i)));
+    }    
+    assert.equal(true, err <= eps, "Linear test failed. Error: " + err)
+}
+
+describe('Linear', function() {
+    it('Should compare against torch Linear layer', testLinear)
+});

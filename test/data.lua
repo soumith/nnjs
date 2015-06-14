@@ -80,6 +80,26 @@ oW = out:size(3)
 print('pool', np, kH, kW, dH, dW, iH, iW, oH, oW)
 
 jenc = json.encode(enc)
-f = io.open('data/pool.json', 'w')
+-- f = io.open('data/pool.json', 'w')
+-- f:write(jenc)
+-- f:close()
+--------------------------------------------------------
+inSize = torch.random(1,100)
+outSize = torch.random(1,100)
+mod = nn.Linear(inSize, outSize)
+inp = torch.randn(inSize)
+out = mod:forward(inp)
+
+enc = {}
+enc.inp = inp:storage():totable()
+enc.out = out:storage():totable()
+enc.weight = mod.weight:storage():totable()
+enc.bias = mod.bias:storage():totable()
+enc.inSize = inSize
+enc.outSize = outSize
+print('linear', inSize, outSize)
+
+jenc = json.encode(enc)
+f = io.open('data/full.json', 'w')
 f:write(jenc)
 f:close()
