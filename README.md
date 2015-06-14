@@ -58,3 +58,10 @@ $ mocha
   2 passing (82ms)
 
 ```
+
+
+### Building for the browser
+``` bash
+npm install -g browserify
+browserify js/init.js -o nn.js
+```
