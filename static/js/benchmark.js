@@ -14,9 +14,9 @@ function benchConvolution() {
 	var inp = ndarray(new Float32Array(c[0]*c[4]*c[5]),
 			  [c[0],c[4],c[5]]);
 	/* clock */
-	var start = new Date().getTime();
+	var start = performance.now();
 	var out = mod.forward(inp);
-	var end = new Date().getTime();
+	var end = performance.now();
 	var time = end - start;
 	console.log('nn.SpatialConvolution(iChannels = ' + c[0]
 		    + ', oChannels = ' + c[1] + ', kH,kW = ' + c[2] + 'x' + c[3]
