@@ -32,7 +32,7 @@ nn.Sequential()
 ###Uses:
 
 - Web workers for using multiple cores
-- SIMD optimizations if the browser supports asm.js
+- SIMD optimizations if the browser supports [SIMD.js](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SIMD#Browser_compatibility)
 
 
 ###Dependencies:
