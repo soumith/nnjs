@@ -17,14 +17,15 @@ For now, this package only implements the **forward** ops, and does not implemen
 ```
 nn.SpatialConvolution(weight, bias) 
 nn.SpatialMaxPooling(kH, kW, dH, dW)
+nn.SpatialConvolution
 nn.ReLU()
 nn.Sigmoid()
 nn.Tanh()
 nn.CAddTable()
 nn.Linear()
-nn.SpatialConvolutionUpsample
 nn.View()
 nn.FeatureLPPooling()
+nn.Sequential()
 ```
 
 
