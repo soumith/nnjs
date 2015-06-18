@@ -13,11 +13,11 @@ function benchConvolution() {
 	/////// Benchmark nn.js //////////////////////////////////
 	var c = sizes[i];
 	var weight = ndarray(new Float32Array(c[0]*c[1]*c[2]*c[3]),
-			     [c[1],c[0],c[2],c[3]]);
+			     [c[1],c[2],c[3],c[0]]);
 	var bias = ndarray(new Float32Array(c[1]), [c[1]]);
-	var mod = new nn.SpatialConvolution(weight, bias);
+	var mod = new nn.SpatialConvolution(weight, bias, 0, 0);
 	var inp = ndarray(new Float32Array(c[0]*c[4]*c[5]),
-			  [c[0],c[4],c[5]]);
+			  [c[4],c[5],c[0]]);
 	/* clock */
 	var start = performance.now();
 	var out = mod.forward(inp);
@@ -30,9 +30,10 @@ function benchConvolution() {
 			 stride:1, pad:0, activation:'relu'});
 	var net = new convnetjs.Net();
 	net.makeLayers(layer_defs);
-	var x = new convnetjs.Vol(inp.data);
+	var x = new convnetjs.Vol(c[4], c[5], c[0]);
 	var start = performance.now();
 	var out = net.forward(x)
+	console.log(out)
 	var end = performance.now();
 	var timeCNNJS = end - start;
 	/////////////////////////////////////////////////////////

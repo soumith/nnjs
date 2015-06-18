@@ -4,74 +4,61 @@ var ndarray = require("ndarray")
 var fill = require("ndarray-fill")
 
 /* weight is a 4D ndarray with dimensions 
-   [nOutputPlane, nInputPlane, kH, kW]
+   [nOutputPlane, kH, kW, nInputPlane]
 
    bias is a 1D ndarray with dimensions
    [nOutputPlane] */
-function SpatialConvolution(weight, bias) {
+function SpatialConvolution(weight, bias, padH, padW) {
     this.weight = weight;
     this.bias = bias;
     this.nOutputPlane = weight.shape[0];
-    this.nInputPlane = weight.shape[1];
-    this.kH = weight.shape[2];
-    this.kW = weight.shape[3];
+    this.kH = weight.shape[1];
+    this.kW = weight.shape[2];
+    this.nInputPlane = weight.shape[3];
+    this.padH = padH
+    this.padW = padW
 }
 
+
+// input.shape[0] = h, input.shape[1] = w, input.shape[2] = d
 SpatialConvolution.prototype.forward = function(input) {
-    var nOutputPlane = this.nOutputPlane | 0;
-    var oH = (input.shape[1] - this.kH + 1) | 0;
-    var oW = (input.shape[2] - this.kW + 1) | 0;
-    var nInputPlane = input.shape[0] | 0;
-    var iH = input.shape[1] | 0;
-    var iW = input.shape[2] | 0;
-    var kH = this.kH | 0;
-    var kW = this.kW | 0;
+    var nOutputPlane = this.nOutputPlane |0;
+    var oH = (input.shape[0] - this.kH + 1) |0;
+    var oW = (input.shape[1] - this.kW + 1) |0;
+    var nInputPlane = input.shape[2] |0;
+    var iH = input.shape[0] |0;
+    var iW = input.shape[1] |0;
+    var kH = this.kH |0;
+    var kW = this.kW |0;
     var weight = this.weight;
     var bias = this.bias;
+    var padH = this.padH |0;
+    var padW = this.padW |0;
     
     var output = ndarray(new Float32Array(nOutputPlane * oH * oW), 
-			 [nOutputPlane, oH, oW]);
+			 [oH, oW, nOutputPlane]);
     
-    /* fill with bias */
-    for (var i = 0; i < bias.shape[0]; i++) {
-	var channel = output.pick(i, null, null);
-	fill(channel, function(k,j) {
-	    return bias.get(i)
-	})
-    }
-
     /* do convolutions */
-    for(var i = 0; i < nOutputPlane; i++) {
-	var oChan = i * (oH * oW);
-	var wOChan = i * (nInputPlane * kH * kW);
-	for(var j = 0; j < nInputPlane; j++) {
-	    var wOIChan = wOChan + j * (kH * kW);
-	    /* get input */
-	    var iChan = j * (iH * iW);
-	    /* regular convolution */
-	    var posH = 0;
-	    var posW = 0;
-	    for(var yy = 0; yy < oH; yy++) {
-		var oHPtr = oChan + yy * oW;
-		for(var xx = 0; xx < oW; xx++) {
-		    /* Dot product in two dimensions... 
-		       (between input image and the mask) */
-		    var oPtr = oHPtr + xx;
-		    var sum = output.data[oPtr]
-		    for(var ky = 0; ky < kH; ky++) {
-			var iHPtr = iChan + ((posH + ky) * iW);
-			var wHPtr = wOIChan + ky * kW;
-			for(var kx = 0; kx < kW; kx++) {
-			    sum += input.data[iHPtr + posW + kx]
-				* weight.data[wHPtr + kx]
+    for (var k = 0; k < nOutputPlane; k++) {
+	var kp1 = k * (kH*kW*nInputPlane);
+	for (var i = padH; i < oH - padH; i++) {
+	    for (var j = padW; j < oW - padW; j++) {
+		/* for each output pixel, calculate it's full convolution loop */
+		var sum = bias.get(k); /* get output pixel */
+		for (var kh = 0; kh < kH; kh++) {
+		    var kp2 = kp1 + kh * (kW*nInputPlane)
+		    var ih = i + kh;
+		    var ip1 = ih * (iW * nInputPlane);
+		    for (var kw = 0; kw < kW; kw++) {
+			var kp3 = kp2 + kw * nInputPlane;
+			var iw = j + kw;
+			var ip2 = ip1 + iw * (nInputPlane)
+			for (var ip = 0; ip < nInputPlane; ip++) {
+			    sum += weight.data[kp3 + ip] * input.data[ip2 + ip];
 			}
 		    }
-		    /* Update output */
-		    output.data[oPtr] = sum;
-		    posW++;
 		}
-		posH++;
-		posW = 0;
+		output.set(i, j, k, sum);
 	    }
 	}
     }
@@ -133,9 +120,9 @@ function SpatialMaxPooling(kH, kW, dH, dW) {
 }
 
 SpatialMaxPooling.prototype.forward = function(input) {
-    var nPlane = input.shape[0];
-    var iH = input.shape[1];
-    var iW = input.shape[2];
+    var nPlane = input.shape[2];
+    var iH = input.shape[0];
+    var iW = input.shape[1];
     var kH = this.kH
     var kW = this.kW
     var dH = this.dH
@@ -143,7 +130,7 @@ SpatialMaxPooling.prototype.forward = function(input) {
     var oH = Math.floor((iH - kH) / dH + 1);
     var oW = Math.floor((iW - kW) / dW + 1);
 
-    var output = ndarray(new Float32Array(nPlane * oH * oW),  [nPlane, oH, oW]);
+    var output = ndarray(new Float32Array(nPlane * oH * oW),  [oH, oW, nPlane]);
 
     var idata = input.data;
     var odata = output.data;
@@ -154,15 +141,15 @@ SpatialMaxPooling.prototype.forward = function(input) {
 	for(i = 0; i < oH; i++) {
 	    for(j = 0; j < oW; j++) {
 		/* local pointers */
-		var ip = k*iW*iH + i*iW*dH + j*dW;
-		var op = k*oW*oH + i*oW + j;
+		var ip = (i * dH) * iW * nPlane + (j * dW) * nPlane + k;
+		var op = (  i   ) * oW * nPlane + (  j   ) * nPlane + k;
 
 		/* compute local max: */
 		var maxval = -999999;
 		var x,y;
 		for(y = 0; y < kH; y++) {
 		    for(x = 0; x < kW; x++) {
-			var val = idata[ip + y*iW + x];
+			var val = idata[ip + (y * iW + x) * nPlane];
 			if (val > maxval) {
 			    maxval = val;
 			}
