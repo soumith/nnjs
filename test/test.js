@@ -8,7 +8,7 @@ function testSpatialConvolution() {
     var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));
     var weight = ndarray(data.weight, [data.op, data.ip, data.kH, data.kW]);
     var bias = ndarray(data.bias, [data.op]);
-    var mod = new nn.SpatialConvolution(weight, bias);
+    var mod = new nn.SpatialConvolution(weight, bias, 0, 0);
     var oH = data.iH - data.kH + 1;
     var oW = data.iW - data.kW + 1;
     var gt = ndarray(data.out, [data.op, oH, oW])
