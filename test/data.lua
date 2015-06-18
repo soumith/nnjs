@@ -74,15 +74,34 @@ enc.iW = iW
 enc.dH = dH
 enc.dW = dW
 
+local oH = math.floor((iH - kH) / dH + 1)
+local oW = math.floor((iW - kW) / dW + 1)
+inpHWD = torch.randn(iH, iW, np)
+outHWD = torch.randn(oH, oW, np)
+for i = 0, np do
+   for j = 0, iH do
+      for k = 0, iW do
+         inpHWD[{j, k, i}] = inp[{i, j, k}]
+      end
+   end
+   for j = 0, oH do
+      for k = 0, oW do
+         outHWD[{j, k, i}] = out[{i, j, k}]
+      end
+   end
+end
+enc.inpHWD = inpHWD:storage():totable()
+enc.outHWD = outHWD:storage():totable()
+
 oH = out:size(2)
 oW = out:size(3)
 
 print('pool', np, kH, kW, dH, dW, iH, iW, oH, oW)
 
 jenc = json.encode(enc)
--- f = io.open('data/pool.json', 'w')
--- f:write(jenc)
--- f:close()
+f = io.open('data/pool.json', 'w')
+f:write(jenc)
+f:close()
 --------------------------------------------------------
 inSize = torch.random(1,100)
 outSize = torch.random(1,100)
