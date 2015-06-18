@@ -37,25 +37,18 @@ SpatialConvolution.prototype.forward = function(input) {
     var output = ndarray(new Float32Array(nOutputPlane * oH * oW), 
 			 [oH, oW, nOutputPlane]);
     
-    /* fill with bias */
-    for (var i = 0; i < bias.shape[0]; i++) {
-	var channel = output.pick(null, null, i);
-	fill(channel, function(k,j) {
-	    return bias.get(i)
-	})
-    }
-
     /* do convolutions */
     for (var k = 0; k < nOutputPlane; k++) {
 	for (var i = padH; i < oH - padH; i++) {
 	    for (var j = padW; j < oW - padW; j++) {
 		/* for each output pixel, calculate it's full convolution loop */
-		var sum = output.get(i, j, k); /* get output pixel */
+		var sum = bias.get(k); /* get output pixel */
 		for (var kh = 0; kh < kH; kh++) {
 		    var ih = i + kh;
 		    for (var kw = 0; kw < kW; kw++) {
 			var iw = j + kw;
 			for (var ip = 0; ip < nInputPlane; ip++) {
+			    // console.log(k, kh, kw, ip, ih, iw, weight.get(k, kh, kw, ip), input.get(ih, iw, ip));
 			    sum += weight.get(k, kh, kw, ip) * input.get(ih, iw, ip);
 			}
 		    }
