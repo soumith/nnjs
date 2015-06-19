@@ -18,8 +18,6 @@ function SpatialConvolution(weight, bias, padH, padW) {
     this.padW = padW
 }
 
-
-// input.shape[0] = h, input.shape[1] = w, input.shape[2] = d
 SpatialConvolution.prototype.forward = function(input) {
     var nOutputPlane = this.nOutputPlane |0;
     var oH = (input.shape[0] - this.kH + 1) |0;
