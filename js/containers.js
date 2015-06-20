@@ -68,10 +68,9 @@ JoinTable.prototype.forward = function(input) {
     for (var j=0; j < input.length; j++) {
 	var inp = input[j].data;
 	for (var i=0; i < inp.length; i++) {
-	    output[idx++] = inp[i];
+	    output.data[idx++] = inp[i];
 	}
     }
-
     return output;
 }
 

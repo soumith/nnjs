@@ -20,14 +20,12 @@ Linear.prototype.forward = function(input) {
     var output = ndarray(new Float32Array(outSize), [outSize]);
     
     for (var i=0; i < outSize; i++) {
-	var o = 0
+	var o = bias.get(i);
 	for (var j=0; j < inSize; j++) {
-	    o += input.get(j) * weight.get(i, j);
+	    o += input.data[j] * weight.data[i * inSize + j];
 	}
-	o += bias.get(i);
 	output.set(i, o);
     }
-
     return output
 }
 
