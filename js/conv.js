@@ -20,8 +20,8 @@ function SpatialConvolution(weight, bias, padH, padW) {
 
 SpatialConvolution.prototype.forward = function(input) {
     var nOutputPlane = this.nOutputPlane |0;
-    var oH = (input.shape[0] - this.kH + 1) |0;
-    var oW = (input.shape[1] - this.kW + 1) |0;
+    var oH = (input.shape[0] + this.padH*2 - this.kH + 1) |0;
+    var oW = (input.shape[1] + this.padW*2 - this.kW + 1) |0;
     var nInputPlane = input.shape[2] |0;
     var iH = input.shape[0] |0;
     var iW = input.shape[1] |0;
