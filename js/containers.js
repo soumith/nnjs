@@ -43,9 +43,6 @@ env.ParallelTable = ParallelTable
 
 function JoinTable(dim) {
     this.dim = dim;
-    if ( ! (dim == 1)) {
-	throw('only dim-1 JoinTable is supported for now')
-    }
 }
 
 JoinTable.prototype.forward = function(input) {
@@ -54,8 +51,8 @@ JoinTable.prototype.forward = function(input) {
 	size += input[i].shape[this.dim-1];
     }
     var outShape = [];
-    for (var i=0; i < input[1].shape.length; i++) {
-	outShape[i] = input[1].shape[i];
+    for (var i=0; i < input[0].shape.length; i++) {
+	outShape[i] = input[0].shape[i];
     }
     outShape[this.dim-1] = size;
     var footprint = 1;
@@ -64,12 +61,30 @@ JoinTable.prototype.forward = function(input) {
     }
 
     var output = ndarray(new Float32Array(footprint), outShape);
-    var idx = 0;
-    for (var j=0; j < input.length; j++) {
-	var inp = input[j].data;
-	for (var i=0; i < inp.length; i++) {
-	    output.data[idx++] = inp[i];
+    if (this.dim == 1) {
+	var idx = 0;
+	for (var j=0; j < input.length; j++) {
+	    var inp = input[j].data;
+	    for (var i=0; i < inp.length; i++) {
+		output.data[idx++] = inp[i];
+	    }
 	}
+    } else if (this.dim == 3) {
+	for (var i=0; i < outShape[0]; i++) {
+	    for (var j=0; j < outShape[1]; j++) {
+		var idx = 0;
+		for (var k=0; k < input.length; k++) {
+		    var inp = input[k];
+		    var sz = inp.shape[this.dim-1];
+		    for (var t=0; t < sz; t++) {
+			output.set(i, j, idx + t, inp.get(i, j, t))
+		    }
+		    idx = idx + sz;
+		}
+	    }
+	}
+    } else {
+	throw('Unsupported dim: ' + this.dim);
     }
     return output;
 }
