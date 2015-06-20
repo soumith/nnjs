@@ -11,20 +11,20 @@ function SpatialConvolution(weight, bias, padH, padW) {
     this.weight = weight;
     this.bias = bias;
     this.nOutputPlane = weight.shape[0];
-    this.kH = weight.shape[1];
-    this.kW = weight.shape[2];
-    this.nInputPlane = weight.shape[3];
+    this.nInputPlane = weight.shape[1];
+    this.kH = weight.shape[2];
+    this.kW = weight.shape[3];
     this.padH = padH
     this.padW = padW
 }
 
 SpatialConvolution.prototype.forward = function(input) {
     var nOutputPlane = this.nOutputPlane |0;
-    var oH = (input.shape[0] + this.padH*2 - this.kH + 1) |0;
-    var oW = (input.shape[1] + this.padW*2 - this.kW + 1) |0;
-    var nInputPlane = input.shape[2] |0;
-    var iH = input.shape[0] |0;
-    var iW = input.shape[1] |0;
+    var nInputPlane = input.shape[0] |0;
+    var iH = input.shape[1] |0;
+    var iW = input.shape[2] |0;
+    var oH = (iH + this.padH*2 - this.kH + 1) |0;
+    var oW = (iW + this.padW*2 - this.kW + 1) |0;
     var kH = this.kH |0;
     var kW = this.kW |0;
     var weight = this.weight;
@@ -33,29 +33,48 @@ SpatialConvolution.prototype.forward = function(input) {
     var padW = this.padW |0;
     
     var output = ndarray(new Float32Array(nOutputPlane * oH * oW), 
-			 [oH, oW, nOutputPlane]);
+			 [nOutputPlane, oH, oW]);
+
+    /* fill with bias */
+    for (var i = 0; i < bias.shape[0]; i++) {
+	var channel = output.pick(i, null, null);
+	fill(channel, function(k,j) {
+	    return bias.get(i)
+	})
+    }
     
     /* do convolutions */
-    for (var k = 0; k < nOutputPlane; k++) {
-	var kp1 = k * (kH*kW*nInputPlane);
-	for (var i = padH; i < oH - padH; i++) {
-	    for (var j = padW; j < oW - padW; j++) {
-		/* for each output pixel, calculate it's full convolution loop */
-		var sum = bias.get(k); /* get output pixel */
-		for (var kh = 0; kh < kH; kh++) {
-		    var kp2 = kp1 + kh * (kW*nInputPlane)
-		    var ih = i + kh;
-		    var ip1 = ih * (iW * nInputPlane);
-		    for (var kw = 0; kw < kW; kw++) {
-			var kp3 = kp2 + kw * nInputPlane;
-			var iw = j + kw;
-			var ip2 = ip1 + iw * (nInputPlane)
-			for (var ip = 0; ip < nInputPlane; ip++) {
-			    sum += weight.data[kp3 + ip] * input.data[ip2 + ip];
+    for(var i = 0; i < nOutputPlane; i++) {
+	var oChan = i * (oH * oW);
+	var wOChan = i * (nInputPlane * kH * kW);
+	for(var j = 0; j < nInputPlane; j++) {
+	    var wOIChan = wOChan + j * (kH * kW);
+	    /* get input */
+	    var iChan = j * (iH * iW);
+	    /* regular convolution */
+	    var posH = 0;
+	    var posW = 0;
+	    for(var yy = 0; yy < oH; yy++) {
+		var oHPtr = oChan + yy * oW;
+		for(var xx = 0; xx < oW; xx++) {
+		    /* Dot product in two dimensions... 
+		       (between input image and the mask) */
+		    var oPtr = oHPtr + xx;
+		    var sum = output.data[oPtr]
+		    for(var ky = 0; ky < kH; ky++) {
+			var iHPtr = iChan + ((posH + ky) * iW);
+			var wHPtr = wOIChan + ky * kW;
+			for(var kx = 0; kx < kW; kx++) {
+			    sum += input.data[iHPtr + posW + kx]
+				* weight.data[wHPtr + kx]
 			}
 		    }
+		    /* Update output */
+		    output.data[oPtr] = sum;
+		    posW++;
 		}
-		output.set(i, j, k, sum);
+		posH++;
+		posW = 0;
 	    }
 	}
     }

@@ -24,10 +24,10 @@ inp = torch.randn(ip, iH, iW)
 out = mod:forward(inp)
 
 enc = {}
-enc.weight = mod.weight:transpose(2,4):transpose(2,3):contiguous():storage():totable()
+enc.weight = mod.weight:storage():totable()
 enc.bias =  mod.bias:storage():totable()
-enc.inp = inp:transpose(1,3):transpose(1,2):contiguous():storage():totable()
-enc.out = out:transpose(1,3):transpose(1,2):contiguous():storage():totable()
+enc.inp = inp:storage():totable()
+enc.out = out:storage():totable()
 enc.ip = ip
 enc.op = op
 enc.kH = kH
@@ -77,8 +77,8 @@ enc.dW = dW
 local oH = math.floor((iH - kH) / dH + 1)
 local oW = math.floor((iW - kW) / dW + 1)
 
-enc.inpHWD = inp:transpose(1,3):transpose(1,2):contiguous():storage():totable()
-enc.outHWD = out:transpose(1,3):transpose(1,2):contiguous():storage():totable()
+enc.inpHWD = inp:storage():totable()
+enc.outHWD = out:storage():totable()
 
 oH = out:size(2)
 oW = out:size(3)
