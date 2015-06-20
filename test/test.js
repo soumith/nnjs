@@ -71,3 +71,14 @@ function testLinear() {
 describe('Linear', function() {
     it('Should compare against torch Linear layer', testLinear)
 });
+
+function testLoader() {
+    var data = fs.readFileSync('data/8x8.json', 'utf8');
+    var model = nn.loadFromJSON(data);
+    var data = fs.readFileSync('data/14x28.json', 'utf8');
+    var model = nn.loadFromJSON(data);
+}
+
+describe('Loader', function() {
+    it('Should load a full multi-layer model and compare against torch result', testLoader)
+});

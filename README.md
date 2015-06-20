@@ -1,9 +1,12 @@
 # nn.js : high performance neural networks for the Browser
 
-**A fast low-level javascript package for multi-threaded (and SIMD-optimized) neural net layers for the browser.**
+## This package is in all respects inferior to [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/)
 
 This package is not meant to replace the excellent [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/),  
-but provide a lower-level package that convnet.js could possibly depend on.
+but provide a lower-level package.
+
+**A fast low-level javascript package for multi-threaded neural net layers for the browser.**
+
 
 For now, this package only implements the **forward** ops, and does not implement backward.
 
@@ -17,22 +20,17 @@ For now, this package only implements the **forward** ops, and does not implemen
 ```
 nn.SpatialConvolution(weight, bias) 
 nn.SpatialMaxPooling(kH, kW, dH, dW)
-nn.SpatialConvolution
 nn.ReLU()
-nn.Sigmoid()
-nn.Tanh()
-nn.CAddTable()
 nn.Linear()
 nn.View()
-nn.FeatureLPPooling()
 nn.Sequential()
 ```
 
 
 ###Uses:
 
-- Web workers for using multiple cores
-- SIMD optimizations if the browser supports [SIMD.js](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SIMD#Browser_compatibility)
+- [TODO] Web workers for using multiple cores
+- [TODO] SIMD optimizations if the browser supports [SIMD.js](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SIMD#Browser_compatibility)
 
 
 ###Dependencies:
