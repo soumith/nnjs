@@ -6,7 +6,7 @@ function ReLU() {}
 /* in-place ReLU */
 ReLU.prototype.forward = function(input) {
     var d = input.data;
-    for (i=0; i < d.length; i++) {
+    for (var i=0; i < d.length; i++) {
 	if (d[i] < 0) { 
 	    d[i] = 0 
 	}

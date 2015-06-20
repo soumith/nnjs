@@ -6,13 +6,13 @@ var assert = require('assert');
 function loadFromObject(inp) {
     if (inp.type == 'Sequential') {
 	var out = new env.Sequential()
-	for (i=0; i < inp.modules.length; i++) {
+	for (var i=0; i < inp.modules.length; i++) {
 	    out.add(loadFromObject(inp.modules[i]));
 	}
 	return out;
     } else if (inp.type == 'ParallelTable') {
 	var out = new env.ParallelTable()
-	for (i=0; i < inp.modules.length; i++) {
+	for (var i=0; i < inp.modules.length; i++) {
 	    out.add(loadFromObject(inp.modules[i]));
 	}
 	return out;
@@ -43,7 +43,7 @@ function loadFromObject(inp) {
 
 function loadFromJSON(inp) {
     var input = JSON.parse(inp);
-    loadFromObject(input);
+    return loadFromObject(input);
 }
 
 function loadFromMsgPack(input) {

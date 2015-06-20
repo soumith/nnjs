@@ -25,7 +25,7 @@ SpatialMaxPooling.prototype.forward = function(input) {
     var idata = input.data;
     var odata = output.data;
 
-    for (k = 0; k < nPlane; k++) {
+    for (var k = 0; k < nPlane; k++) {
 	/* loop over output */
 	var i, j;
 	for(i = 0; i < oH; i++) {

@@ -75,8 +75,22 @@ describe('Linear', function() {
 function testLoader() {
     var data = fs.readFileSync('data/8x8.json', 'utf8');
     var model = nn.loadFromJSON(data);
-    var data = fs.readFileSync('data/14x28.json', 'utf8');
-    var model = nn.loadFromJSON(data);
+    // console.log(model)
+    var io = JSON.parse(fs.readFileSync('data/8x8.out.json', 'utf8'));
+    var inp = io.input
+    var gt_out = io.output
+    for (var i=0; i < inp.length; i++) {
+	inp[i] = ndarray(inp[i], [inp[i].length])
+    }
+    var out = model.forward(inp)
+    console.log(out.shape)
+    var err = 0;
+    for (var i=0; i < gt_out.length; i++) {
+	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
+    }
+    assert.equal(true, err <= eps, "loader test failed. Error: " + err)
+    // var data = fs.readFileSync('data/14x28.json', 'utf8');
+    // var model = nn.loadFromJSON(data);
 }
 
 describe('Loader', function() {
