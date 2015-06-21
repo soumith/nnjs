@@ -75,8 +75,12 @@ describe('Linear', function() {
 });
 
 function testLoader() {
-    var data = fs.readFileSync('test/data/8x8.json', 'utf8');
-    var model = nn.loadFromJSON(data);
+    // var data = fs.readFileSync('test/data/8x8.json', 'utf8');
+    // var model = nn.loadFromJSON(data);
+    var data = fs.readFileSync('test/data/8x8.mpac');
+    var model = nn.loadFromMsgPack(data);
+    // var data = fs.readFileSync('test/data/8x8.mpac.gz');
+    // var model = nn.loadFromGZipMsgPack(data);
     var io = JSON.parse(fs.readFileSync('test/data/8x8.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output
@@ -90,8 +94,10 @@ function testLoader() {
     }
     assert.equal(true, err <= eps, "loader test failed. Error: " + err)
     ///////////////////////////////////////////////////////////////////
-    var data = fs.readFileSync('test/data/8x14.json', 'utf8');
-    var model = nn.loadFromJSON(data);
+    // var data = fs.readFileSync('test/data/8x14.json', 'utf8');
+    // var model = nn.loadFromJSON(data);
+    var data = fs.readFileSync('test/data/8x14.mpac');
+    var model = nn.loadFromMsgPack(data);
     var io = JSON.parse(fs.readFileSync('test/data/8x14.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output
@@ -104,9 +110,11 @@ function testLoader() {
     	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
     }
     assert.equal(true, err <= eps, "loader test failed. Error: " + err)
-    ///////////////////////////////////////////////////////////////////
-    var data = fs.readFileSync('test/data/14x28.json', 'utf8');
-    var model = nn.loadFromJSON(data);
+    // ///////////////////////////////////////////////////////////////////
+    // var data = fs.readFileSync('test/data/14x28.json', 'utf8');
+    // var model = nn.loadFromJSON(data);
+    var data = fs.readFileSync('test/data/14x28.mpac');
+    var model = nn.loadFromMsgPack(data);
     var io = JSON.parse(fs.readFileSync('test/data/14x28.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output

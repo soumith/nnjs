@@ -46,12 +46,25 @@ function loadFromJSON(inp) {
     return loadFromObject(input);
 }
 
+var msgpack = require('msgpack-js');
 function loadFromMsgPack(input) {
+    var output = msgpack.decode(input);
+    return loadFromObject(output);
 }
 
-function loadFromGZipMsgPack(input) {
-}
+// var pako = require('pako');
+// function loadFromGZipMsgPack(input) {
+//     var output = pako.deflate(input);
+//     return loadFromMsgPack(output);
+// }
+
+// function loadFromGZipJSON(input) {
+//     var output = pako.deflate(input);
+//     return loadFromJSON(output);
+// }
 
 env.loadFromJSON = loadFromJSON
 env.loadFromMsgPack = loadFromMsgPack
-env.loadFromGZipMsgPack = loadFromGZipMsgPack
+
+// env.loadFromGZipMsgPack = loadFromGZipMsgPack
+// env.loadFromGZipJSON = loadFromGZipJSON
