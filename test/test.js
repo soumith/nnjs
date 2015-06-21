@@ -90,20 +90,20 @@ function testLoader() {
     }
     assert.equal(true, err <= eps, "loader test failed. Error: " + err)
     ///////////////////////////////////////////////////////////////////
-    // var data = fs.readFileSync('data/14x28.json', 'utf8');
-    // var model = nn.loadFromJSON(data);
-    // var io = JSON.parse(fs.readFileSync('data/14x28.out.json', 'utf8'));
-    // var inp = io.input
-    // var gt_out = io.output
-    // inp[0] = ndarray(inp[0], [28,28,1])
-    // inp[1] = ndarray(inp[1], [1,1,10])
-    // inp[2] = ndarray(inp[2], [28,28,3])
-    // var out = model.forward(inp)
-    // var err = 0;
-    // for (var i=0; i < gt_out.length; i++) {
-    // 	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
-    // }
-    // assert.equal(true, err <= eps, "loader test failed. Error: " + err)
+    var data = fs.readFileSync('data/14x28.json', 'utf8');
+    var model = nn.loadFromJSON(data);
+    var io = JSON.parse(fs.readFileSync('data/14x28.out.json', 'utf8'));
+    var inp = io.input
+    var gt_out = io.output
+    inp[0] = ndarray(inp[0], [1,28,28])
+    inp[1] = ndarray(inp[1], [10,1,1])
+    inp[2] = ndarray(inp[2], [3,28,28])
+    var out = model.forward(inp)
+    var err = 0;
+    for (var i=0; i < gt_out.length; i++) {
+    	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
+    }
+    assert.equal(true, err <= eps, "loader test failed. Error: " + err)
 }
 
 describe('Loader', function() {

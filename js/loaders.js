@@ -31,8 +31,8 @@ function loadFromObject(inp) {
 	return new env.View(inp.dims)
     } else if (inp.type == 'SpatialConvolution') {
 	var weight = new ndarray(inp.weight, 
-				 [inp.nOutputPlane, 
-				  inp.kH, inp.kW, inp.nInputPlane]);
+				 [inp.nOutputPlane, inp.nInputPlane,
+				  inp.kH, inp.kW]);
 	var bias = new ndarray(inp.bias, [inp.nOutputPlane])
 	return new env.SpatialConvolution(weight, bias,
 					  inp.padH, inp.padW)

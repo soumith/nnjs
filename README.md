@@ -18,12 +18,15 @@ For now, this package only implements the **forward** ops, and does not implemen
 
 ### Layers:
 ```
-nn.SpatialConvolution(weight, bias) 
+nn.SpatialConvolution(weight, bias, padH, padW) 
 nn.SpatialMaxPooling(kH, kW, dH, dW)
 nn.ReLU()
-nn.Linear()
-nn.View()
+nn.Linear(weight, bias)
+nn.View(shape)
 nn.Sequential()
+nn.JoinTable(dim)
+nn.ParallelTable()
+nn.Identity()
 ```
 
 
@@ -44,19 +47,24 @@ nn.Sequential()
 Unit tests can be run via nodejs.
 ``` bash
 $ npm -g install mocha
-$ cd nnjs
-$ mocha
+$ cd nnjs/test
+$ mocha --timeout 10000
 
   SpatialConvolution
-      ✓ Should compare against torch convolutions (77ms)
+      ✓ Should compare against torch convolutions (126ms)
 
   SpatialMaxPooling
       ✓ Should compare against torch SpatialMaxPooling
 
+  Linear
+      ✓ Should compare against torch Linear layer
 
-  2 passing (82ms)
+  Loader
+      ✓ Should load a full multi-layer model and compare against torch result (3051ms)
 
-```
+
+  4 passing (3s)
+  ```
 
 
 ### Building for the browser

@@ -31,7 +31,6 @@ SpatialConvolution.prototype.forward = function(input) {
     var bias = this.bias;
     var padH = this.padH |0;
     var padW = this.padW |0;
-    
     var output = ndarray(new Float32Array(nOutputPlane * oH * oW), 
 			 [nOutputPlane, oH, oW]);
 
