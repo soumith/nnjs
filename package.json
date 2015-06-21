@@ -1,0 +1,34 @@
+{
+    "name": "nn",
+    "version": "0.0.1",
+    "description": "Fast neural networks for the browser in a Torch style API",
+    "author": "Soumith Chintala <soumith@gmail.com>",
+    "scripts": {
+	"test": "mocha",
+	"start": "node index.js",
+	"compile": "browserify -r ./js/init.js:nn -r ndarray -r ndarray-fill -o static/js/nn.js"
+    },
+    "main": "js/init.js",
+    "repository": {
+	"type": "git",
+	"url": "https://github.com/soumith/nnjs"
+    },
+    "bugs": {
+	"url": "https://github.com/soumith/nnjs/issues"
+    },
+    "keywords": [
+	"neural networks",
+	"torch",
+	"deep learning"
+    ],
+    "dependencies": {
+	"ndarray": "*",
+	"ndarray-fill": "*",
+	"parallel": "*"
+    },
+    "devDependencies": {
+	"browserify": "*",
+	"mocha": "*"
+    },
+    "license": "BSD"
+}

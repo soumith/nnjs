@@ -47,7 +47,7 @@ nn.Identity()
 Unit tests can be run via nodejs.
 ``` bash
 $ npm -g install mocha
-$ cd nnjs/test
+$ cd nnjs
 $ mocha 
 
   SpatialConvolution

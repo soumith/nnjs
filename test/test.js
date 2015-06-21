@@ -5,7 +5,7 @@ var assert = require("assert")
 var eps = 1e-5
 
 function testSpatialConvolution() {
-    var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('test/data/conv.json', 'utf8'));
     var weight = ndarray(data.weight, [data.op, data.ip, data.kH, data.kW]);
     var bias = ndarray(data.bias, [data.op]);
     var mod = new nn.SpatialConvolution(weight, bias, data.padH, data.padW);
@@ -31,7 +31,7 @@ describe('SpatialConvolution', function() {
 });
 
 function testSpatialMaxPooling() {
-    var data = JSON.parse(fs.readFileSync('data/pool.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('test/data/pool.json', 'utf8'));
     var mod = new nn.SpatialMaxPooling(data.kH, data.kW, data.dH, data.dW);
     var oH = Math.floor((data.iH - data.kH) / data.dH + 1);
     var oW = Math.floor((data.iW - data.kW) / data.dW + 1);
@@ -56,7 +56,7 @@ describe('SpatialMaxPooling', function() {
 });
 
 function testLinear() {
-    var data = JSON.parse(fs.readFileSync('data/full.json', 'utf8'));
+    var data = JSON.parse(fs.readFileSync('test/data/full.json', 'utf8'));
     var weight = ndarray(data.weight, [data.outSize, data.inSize]);
     var bias = ndarray(data.bias, [data.outSize]);
     var mod = new nn.Linear(weight, bias);
@@ -75,9 +75,9 @@ describe('Linear', function() {
 });
 
 function testLoader() {
-    var data = fs.readFileSync('data/8x8.json', 'utf8');
+    var data = fs.readFileSync('test/data/8x8.json', 'utf8');
     var model = nn.loadFromJSON(data);
-    var io = JSON.parse(fs.readFileSync('data/8x8.out.json', 'utf8'));
+    var io = JSON.parse(fs.readFileSync('test/data/8x8.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output
     for (var i=0; i < inp.length; i++) {
@@ -90,9 +90,9 @@ function testLoader() {
     }
     assert.equal(true, err <= eps, "loader test failed. Error: " + err)
     ///////////////////////////////////////////////////////////////////
-    var data = fs.readFileSync('data/8x14.json', 'utf8');
+    var data = fs.readFileSync('test/data/8x14.json', 'utf8');
     var model = nn.loadFromJSON(data);
-    var io = JSON.parse(fs.readFileSync('data/8x14.out.json', 'utf8'));
+    var io = JSON.parse(fs.readFileSync('test/data/8x14.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output
     inp[0] = ndarray(inp[0], [1,14,14])
@@ -105,9 +105,9 @@ function testLoader() {
     }
     assert.equal(true, err <= eps, "loader test failed. Error: " + err)
     ///////////////////////////////////////////////////////////////////
-    var data = fs.readFileSync('data/14x28.json', 'utf8');
+    var data = fs.readFileSync('test/data/14x28.json', 'utf8');
     var model = nn.loadFromJSON(data);
-    var io = JSON.parse(fs.readFileSync('data/14x28.out.json', 'utf8'));
+    var io = JSON.parse(fs.readFileSync('test/data/14x28.out.json', 'utf8'));
     var inp = io.input
     var gt_out = io.output
     inp[0] = ndarray(inp[0], [1,28,28])
