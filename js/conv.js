@@ -45,15 +45,14 @@ SpatialConvolution.prototype.forward = function(input) {
     
     /* do convolutions */
     for(var i = 0; i < nOutputPlane; i++) {
-	var oChan = i * (oH * oW);
-	var wOChan = i * (nInputPlane * kH * kW);
+	var oChan = i * (oH * oW); // select the output feature map
+	var wOChan = i * (nInputPlane * kH * kW); // select the weight cube for this feature map
 	for(var j = 0; j < nInputPlane; j++) {
-	    var wOIChan = wOChan + j * (kH * kW);
-	    /* get input */
-	    var iChan = j * (iH * iW);
+	    var wOIChan = wOChan + j * (kH * kW); // select the weight kernel for this (output,input) map pair
+	    var iChan = j * (iH * iW); 	/* get input */
 	    /* regular convolution */
-	    var posH = 0;
-	    var posW = 0;
+	    var posH = -padH;
+	    var posW = -padW;
 	    for(var yy = 0; yy < oH; yy++) {
 		var oHPtr = oChan + yy * oW;
 		for(var xx = 0; xx < oW; xx++) {
@@ -62,11 +61,15 @@ SpatialConvolution.prototype.forward = function(input) {
 		    var oPtr = oHPtr + xx;
 		    var sum = output.data[oPtr]
 		    for(var ky = 0; ky < kH; ky++) {
-			var iHPtr = iChan + ((posH + ky) * iW);
-			var wHPtr = wOIChan + ky * kW;
-			for(var kx = 0; kx < kW; kx++) {
-			    sum += input.data[iHPtr + posW + kx]
-				* weight.data[wHPtr + kx]
+			if (posH+ky >= 0 && posH+ky < iH) {
+			    var iHPtr = iChan + ((posH + ky) * iW);
+			    var wHPtr = wOIChan + ky * kW;
+			    for(var kx = 0; kx < kW; kx++) {
+				if(posW+kx >= 0 && posW+kx < iW) {
+				    sum += input.data[iHPtr + posW + kx]
+					* weight.data[wHPtr + kx]
+				}
+			    }
 			}
 		    }
 		    /* Update output */
@@ -74,7 +77,7 @@ SpatialConvolution.prototype.forward = function(input) {
 		    posW++;
 		}
 		posH++;
-		posW = 0;
+		posW = -padW;
 	    }
 	}
     }

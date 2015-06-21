@@ -7,22 +7,25 @@ kH = torch.random(1,10)
 kW = torch.random(1,10)
 iH = torch.random(kH, 64)
 iW = torch.random(kW, 64)
+padH = torch.random(1,4)
+padW = torch.random(1,4)
 
 --[[
 ip = 1
 op = 1
 kH = 1
-kW = 2
+kW = 1
 iH = 2
 iW = 2
+padH = 3
+padW = 3
 ]]--
 
-print('conv', ip, op, kH, kW, iH, iW)
+print('conv', ip, op, kH, kW, iH, iW, padH, padW)
 
-mod = nn.SpatialConvolution(ip,op,kW,kH)
+mod = nn.SpatialConvolution(ip,op,kW,kH, 1, 1, padW, padH)
 inp = torch.randn(ip, iH, iW)
 out = mod:forward(inp)
-
 enc = {}
 enc.weight = mod.weight:storage():totable()
 enc.bias =  mod.bias:storage():totable()
@@ -34,7 +37,8 @@ enc.kH = kH
 enc.kW = kW
 enc.iH = iH
 enc.iW = iW
-
+enc.padH = padH
+enc.padW = padW
 
 jenc = json.encode(enc)
 f = io.open('data/conv.json', 'w')

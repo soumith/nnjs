@@ -8,9 +8,9 @@ function testSpatialConvolution() {
     var data = JSON.parse(fs.readFileSync('data/conv.json', 'utf8'));
     var weight = ndarray(data.weight, [data.op, data.ip, data.kH, data.kW]);
     var bias = ndarray(data.bias, [data.op]);
-    var mod = new nn.SpatialConvolution(weight, bias, 0, 0);
-    var oH = data.iH - data.kH + 1;
-    var oW = data.iW - data.kW + 1;
+    var mod = new nn.SpatialConvolution(weight, bias, data.padH, data.padW);
+    var oH = data.iH + data.padH*2 - data.kH + 1;
+    var oW = data.iW + data.padW*2 - data.kW + 1;
     var gt = ndarray(data.out, [data.op, oH, oW])
     var inp = ndarray(data.inp, [data.ip, data.iH, data.iW])
     var out = mod.forward(inp)
@@ -18,7 +18,8 @@ function testSpatialConvolution() {
     for (i=0; i < data.op; i++) {
 	for (j=0; j < oH; j++) {
 	    for (k=0; k < oW; k++) {
-		err = Math.max(err, Math.abs(out.get(i, j, k) - gt.get(i, j, k)));
+		var curerr = Math.abs(out.get(i, j, k) - gt.get(i, j, k));
+		err = Math.max(err, curerr);
 	    }
 	}
     }
