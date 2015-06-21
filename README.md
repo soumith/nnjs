@@ -48,7 +48,7 @@ Unit tests can be run via nodejs.
 ``` bash
 $ npm -g install mocha
 $ cd nnjs/test
-$ mocha --timeout 10000
+$ mocha 
 
   SpatialConvolution
       ✓ Should compare against torch convolutions (126ms)

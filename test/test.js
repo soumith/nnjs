@@ -122,5 +122,6 @@ function testLoader() {
 }
 
 describe('Loader', function() {
+    this.timeout(10000);
     it('Should load a full multi-layer model and compare against torch result', testLoader)
 });
