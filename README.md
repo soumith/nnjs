@@ -12,9 +12,6 @@ For now, this package only implements the **forward** ops, and does not implemen
 
 ###Optimized versions of:
 - convolutions (in the context of convnets)
-- matrix multiplies (in the context of fully-connected layers)
-- fast vector addition
-
 
 ### Layers:
 ```
@@ -29,11 +26,10 @@ nn.ParallelTable()
 nn.Identity()
 ```
 
-
 ###Uses:
 
 - [TODO] Web workers for using multiple cores
-- [TODO] SIMD optimizations if the browser supports [SIMD.js](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SIMD#Browser_compatibility)
+- [TODO] SIMD optimizations if the browser supports [SIMD.js](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/SIMD#Browser_compatibility) or [WebAssembly](https://github.com/WebAssembly/design/blob/master/README.md)
 
 
 ###Dependencies:
@@ -41,6 +37,7 @@ nn.Identity()
 - ndarray
 - ndarray-fill
 - paralleljs
+- msgpack-js
 
 ###Unit tests:
 
