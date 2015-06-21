@@ -87,7 +87,10 @@ function testLoader() {
     for (var i=0; i < inp.length; i++) {
     	inp[i] = ndarray(inp[i], [inp[i].length])
     }
+    var start = new Date().getTime();;
     var out = model.forward(inp)
+    var end = new Date().getTime();;
+    console.log('network 1 time : ', end - start);
     var err = 0;
     for (var i=0; i < gt_out.length; i++) {
     	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
@@ -104,7 +107,10 @@ function testLoader() {
     inp[0] = ndarray(inp[0], [1,14,14])
     inp[1] = ndarray(inp[1], [10,1,1])
     inp[2] = ndarray(inp[2], [3,14,14])
+    var start = new Date().getTime();;
     var out = model.forward(inp)
+    var end = new Date().getTime();;
+    console.log('network 2 time : ', end - start);
     var err = 0;
     for (var i=0; i < gt_out.length; i++) {
     	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
@@ -121,7 +127,10 @@ function testLoader() {
     inp[0] = ndarray(inp[0], [1,28,28])
     inp[1] = ndarray(inp[1], [10,1,1])
     inp[2] = ndarray(inp[2], [3,28,28])
+    var start = new Date().getTime();;
     var out = model.forward(inp)
+    var end = new Date().getTime();;
+    console.log('network 3 time : ', end - start);
     var err = 0;
     for (var i=0; i < gt_out.length; i++) {
     	err = Math.max(err, Math.abs(gt_out[i]  - out.data[i]));
