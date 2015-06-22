@@ -24,7 +24,6 @@
     "dependencies": {
 	"ndarray": "*",
 	"ndarray-fill": "*",
-	"parallel": "*",
 	"msgpack-js": "*"
     },
     "devDependencies": {
