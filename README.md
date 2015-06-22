@@ -1,4 +1,4 @@
-# nn.js : high performance neural networks for the Browser
+# nn.js : high performance (not yet) neural networks for the Browser
 
 ## This package is in all respects inferior to [convnet.js](http://cs.stanford.edu/people/karpathy/convnetjs/)
 
