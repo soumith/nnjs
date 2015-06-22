@@ -12,6 +12,8 @@ For now, this package only implements the **forward** ops, and does not implemen
 
 It is useful when porting Torch models to the browser.
 
+For example, it powers the browser demo in: [http://soumith.ch/eyescream](http://soumith.ch/eyescream)
+
 ### Layers:
 ```
 nn.SpatialConvolution(weight, bias, padH, padW) 
