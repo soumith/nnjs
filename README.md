@@ -10,8 +10,7 @@ but provide a lower-level package.
 
 For now, this package only implements the **forward** ops, and does not implement backward.
 
-###Optimized versions of:
-- convolutions (in the context of convnets)
+It is useful when porting Torch models to the browser.
 
 ### Layers:
 ```
@@ -36,7 +35,6 @@ nn.Identity()
 
 - ndarray
 - ndarray-fill
-- paralleljs
 - msgpack-js
 
 ###Unit tests:
