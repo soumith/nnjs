@@ -16,6 +16,19 @@ function SpatialConvolution(weight, bias, padH, padW) {
     this.kW = weight.shape[3];
     this.padH = padH
     this.padW = padW
+    /* convert weight to HWD */
+    var w_ = ndarray(new Float32Array(this.nOutputPlane * this.nInputPlane * this.kH * this.kW), 
+		     [this.nOutputPlane, this.kH, this.kW, this.nInputPlane]);
+    for (var i=0; i < this.nOutputPlane; i++) {
+	for (var j=0; j < this.nInputPlane; j++) {
+	    for (var k=0; k < this.kH; k++) {
+		for (var s=0; s < this.kW; s++) {
+		    w_.set(i,k,s,j, this.weight.get(i,j,k,s));
+		}
+	    }
+	}
+    }
+    this.weight = w_;
 }
 
 SpatialConvolution.prototype.forward = function(input) {
@@ -41,44 +54,47 @@ SpatialConvolution.prototype.forward = function(input) {
 	    return bias.get(i)
 	})
     }
-    
-    /* do convolutions */
-    for(var i = 0; i < nOutputPlane; i++) {
-	var oChan = i * (oH * oW); // select the output feature map
-	var wOChan = i * (nInputPlane * kH * kW); // select the weight cube for this feature map
-	for(var j = 0; j < nInputPlane; j++) {
-	    var wOIChan = wOChan + j * (kH * kW); // select the weight kernel for this (output,input) map pair
-	    var iChan = j * (iH * iW); 	/* get input */
-	    /* regular convolution */
-	    var posH = -padH;
-	    var posW = -padW;
-	    for(var yy = 0; yy < oH; yy++) {
-		var oHPtr = oChan + yy * oW;
-		for(var xx = 0; xx < oW; xx++) {
-		    /* Dot product in two dimensions...(between input image and the mask) */
-		    var oPtr = oHPtr + xx;
-		    var sum = output.data[oPtr]
-		    for(var ky = 0; ky < kH; ky++) {
-			if (posH+ky >= 0 && posH+ky < iH) {
-			    var iHPtr = iChan + ((posH + ky) * iW);
-			    var wHPtr = wOIChan + ky * kW;
-			    for(var kx = 0; kx < kW; kx++) {
-				if(posW+kx >= 0 && posW+kx < iW) {
-				    sum += input.data[iHPtr + posW + kx]
-					* weight.data[wHPtr + kx]
-				}
-			    }
-			}
-		    }
-		    /* Update output */
-		    output.data[oPtr] = sum;
-		    posW++;
-		}
-		posH++;
-		posW = -padW;
+
+    /* convert input to HWD */
+    var inp_ = ndarray(new Float32Array(nInputPlane * (iH+padH*2) * (iW+padW*2)), 
+		     [iH+padH*2, iW+padW*2, nInputPlane]);
+    for (var j=0; j < nInputPlane; j++) {
+	for (var k=0; k < iH; k++) {
+	    for (var s=0; s < iW; s++) {
+		inp_.set(k+padH,s+padW, j, input.get(j,k,s));
 	    }
 	}
     }
+    iH = iH + padH*2
+    iW = iW + padW*2
+    input = inp_;
+    
+    /* do convolutions */
+    for (var k = 0; k < nOutputPlane; k++) {
+	for (var i = 0; i < oH; i++) {
+	    for (var j = 0; j < oW; j++) {
+		/* for each output pixel, calculate it's full convolution loop */
+		var sum = bias.get(k); /* get output pixel */
+		for (var kh = 0; kh < kH; kh++) {
+		    var ih = i + kh; // - padH;
+		    // if (ih < 0 || ih >= iH) continue;
+		    for (var kw = 0; kw < kW; kw++) {
+			var iw = j + kw;
+			for (var ip = 0; ip < nInputPlane; ip++) {
+			    var wPtr = k * (kH*kW*nInputPlane) + kh * (kW*nInputPlane) + kw * nInputPlane + ip
+			    var iPtr = ih * (iW * nInputPlane) + iw * (nInputPlane) + ip;
+			    if (wPtr >=0 && wPtr < weight.data.length && iPtr >=0 && iPtr < input.data.length)
+				sum += weight.data[wPtr] * input.data[iPtr];
+			}
+		    }
+		}
+		output.set(k, i, j, sum);
+	    }
+	}
+    }
+    
+    /* convert output to DHW */
+    
     return output
 }
 
